@@ -1,30 +1,7 @@
 .App {
-  text-align: center;
   display: grid;
   grid-template-rows: 1fr 50px 1fr;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
+  height: 95vh;
 }
 
 .inverted {
@@ -37,5 +14,32 @@
 }
 
 h2 {
-  color: blue;
+  color: chartreuse;
+}
+
+.player {
+  color: white;
+  font-weight: 600;
+  background-color: green;
+}
+
+.btnTally {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+
+.btnTally .quantity {
+  color: green;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  margin: 10px;
+  gap: 10px;
 }

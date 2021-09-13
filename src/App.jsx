@@ -6,7 +6,7 @@ import './App.css';
 const SCORE_LIMITS = {
   MIN: 0,
   MAX: 121,
-}
+};
 
 const TALLY = {
   FIFTEEN: { label: '15', value: 2 },
@@ -21,22 +21,17 @@ const TALLY = {
   NOBS: { label: 'Nobs', value: 1 },
 };
 
-const Winner = ({ winner, resetGame }) => (
-  winner ?
+const Winner = ({ winner, resetGame }) =>
+  winner ? (
     <div className="scoreboard">
       <span>{`Player ${winner} wins!`}</span>
       <button onClick={resetGame}>Play again</button>
     </div>
-    : null
-)
+  ) : null;
 
 const Scoreboard = ({ score, children }) => {
-  return (
-    <div>
-      {children}
-    </div>
-  );
-}
+  return <div>{children}</div>;
+};
 
 const Player = ({ playerNumber, currentScore, opponentScore, updateScore, inverted }) => {
   const [turn, setTurn] = useImmer({});
@@ -50,58 +45,82 @@ const Player = ({ playerNumber, currentScore, opponentScore, updateScore, invert
   }, [turn]);
 
   const resetTurn = () => {
-    setTurn(draft => ({}));
-  }
+    setTurn((draft) => ({}));
+  };
 
   const buildTurn = (tallyType) => {
-    setTurn(draft => {
-      draft[tallyType.label] = { value: tallyType.value, quantity: draft[tallyType.label]?.quantity + 1 || 1 };
+    setTurn((draft) => {
+      draft[tallyType.label] = {
+        value: tallyType.value,
+        quantity: draft[tallyType.label]?.quantity + 1 || 1,
+      };
     });
-  }
+  };
 
   const submitTurn = () => {
     updateScore(playerNumber, turnScore);
     resetTurn();
-  }
+  };
+
+  const TallyButton = ({ tallyType }) => {
+    const type = tallyType.label;
+    const quantity = turn[tallyType.label]?.quantity || 0;
+    const count = quantity ? ` (${quantity})` : '';
+    return (
+      <button class="btnTally" onClick={() => buildTurn(tallyType)}>
+        <div>{type}</div>
+        <div class="quantity">{count}</div>
+      </button>
+    );
+  };
 
   return (
-    <div className={inverted ? 'inverted' : ''}>
+    <div class={inverted ? 'inverted player' : 'player'}>
       <h2>Player {playerNumber}</h2>
       <div>
-        <div>Score: {currentScore} - {opponentScore} </div>
+        <div>
+          Score: {currentScore} - {opponentScore}{' '}
+        </div>
         <div>
           <span>Adjust</span>
           <button onClick={() => updateScore(playerNumber, 1)}>+1</button>
           <button onClick={() => updateScore(playerNumber, -1)}>-1</button>
         </div>
         <div>
-          <h4>Turn score: {turnScore}</h4>
-          <div>
-            <button onClick={() => buildTurn(TALLY.FIFTEEN)}>15</button>
-            <button onClick={() => buildTurn(TALLY.PAIR)}>pair</button>
-            <div>
-              <span>Run of:</span>
-              <button onClick={() => buildTurn(TALLY.RUN3)}>3</button>
-              <button onClick={() => buildTurn(TALLY.RUN4)}>4</button>
-              <button onClick={() => buildTurn(TALLY.RUN5)}>5</button>
-            </div>
-            <div>
-              <span>Flush:</span>
-              <button onClick={() => buildTurn(TALLY.FLUSH4)}>4</button>
-              <button onClick={() => buildTurn(TALLY.FLUSH5)}>5</button>
-            </div>
-            <div>
-              <button onClick={() => buildTurn(TALLY.NIBS)}>nibs(2)</button>
-              <button onClick={() => buildTurn(TALLY.NOBS)}>nobs(1)</button>
-            </div>
+          <div className="row">
+            <span>Turn score: {turnScore}</span>
+            {turnScore ? (
+              <>
+                <button onClick={() => resetTurn()}>reset</button>
+                <button onClick={() => submitTurn()}>score it</button>
+              </>
+            ) : null}
           </div>
-          <div><button onClick={() => resetTurn()}>reset</button>
-            <button onClick={() => submitTurn()}>score it</button>
+          <div className="row">
+            <span>Basics:</span>
+            <TallyButton tallyType={TALLY.FIFTEEN} />
+            <TallyButton tallyType={TALLY.PAIR} />
+          </div>
+          <div className="row">
+            <span>Run:</span>
+            <TallyButton tallyType={TALLY.RUN3} />
+            <TallyButton tallyType={TALLY.RUN4} />
+            <TallyButton tallyType={TALLY.RUN5} />
+          </div>
+          <div className="row">
+            <span>Flush:</span>
+            <TallyButton tallyType={TALLY.FLUSH4} />
+            <TallyButton tallyType={TALLY.FLUSH5} />
+          </div>
+          <div className="row">
+            <span>Jacks:</span>
+            <button onClick={() => buildTurn(TALLY.NIBS)}>nibs(2)</button>
+            <button onClick={() => buildTurn(TALLY.NOBS)}>nobs(1)</button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 function App() {
@@ -117,24 +136,38 @@ function App() {
 
   const changeScore = (playerNumber, increment) => {
     if (!score.winner) {
-      setScore(draft => {
+      setScore((draft) => {
         const prevScore = draft[`p${playerNumber}Score`];
-        const newScore = Math.min(SCORE_LIMITS.MAX, Math.max(SCORE_LIMITS.MIN, prevScore + increment));
+        const newScore = Math.min(
+          SCORE_LIMITS.MAX,
+          Math.max(SCORE_LIMITS.MIN, prevScore + increment)
+        );
         draft[`p${playerNumber}Score`] = newScore;
         if (newScore >= SCORE_LIMITS.MAX) {
           draft.winner = playerNumber;
         }
       });
     }
-  }
+  };
 
   return (
     <div className="App">
-      <Player playerNumber={2} currentScore={score.p2Score} opponentScore={score.p1Score} updateScore={changeScore} inverted />
+      <Player
+        playerNumber={2}
+        currentScore={score.p2Score}
+        opponentScore={score.p1Score}
+        updateScore={changeScore}
+        inverted
+      />
       <Scoreboard score={score}>
         <Winner winner={score.winner} resetGame={resetGame} />
       </Scoreboard>
-      <Player playerNumber={1} currentScore={score.p1Score} opponentScore={score.p2Score} updateScore={changeScore} />
+      <Player
+        playerNumber={1}
+        currentScore={score.p1Score}
+        opponentScore={score.p2Score}
+        updateScore={changeScore}
+      />
     </div>
   );
 }
