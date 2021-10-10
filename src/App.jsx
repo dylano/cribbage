@@ -23,14 +23,14 @@ const TALLY = {
 
 const Winner = ({ winner, resetGame }) =>
   winner ? (
-    <div className="scoreboard">
-      <span>{`Player ${winner} wins!`}</span>
+    <div className="winner">
+      <div>{`Player ${winner} wins!`}</div>
       <button onClick={resetGame}>Play again</button>
     </div>
   ) : null;
 
-const Scoreboard = ({ score, children }) => {
-  return <div>{children}</div>;
+const Scoreboard = ({ children }) => {
+  return <div className="scoreboard">{children}</div>;
 };
 
 const Player = ({ playerNumber, currentScore, opponentScore, updateScore, inverted }) => {
@@ -67,9 +67,9 @@ const Player = ({ playerNumber, currentScore, opponentScore, updateScore, invert
     const quantity = turn[tallyType.label]?.quantity || 0;
     const count = quantity ? ` (${quantity})` : '';
     return (
-      <button class="btnTally" onClick={() => buildTurn(tallyType)}>
+      <button className="btnTally" onClick={() => buildTurn(tallyType)}>
         <div>{type}</div>
-        <div class="quantity">{count}</div>
+        <div className="quantity">{count}</div>
       </button>
     );
   };
@@ -77,7 +77,7 @@ const Player = ({ playerNumber, currentScore, opponentScore, updateScore, invert
   const ScoreButton = ({ onClick, enabled, enabledStyle, children }) => {
     const style = enabled ? enabledStyle : {};
     return (
-      <button class="btnScore" onClick={onClick} style={style} disabled={!enabled}>
+      <button className="btnScore" onClick={onClick} style={style} disabled={!enabled}>
         {children}
       </button>
     );
@@ -86,15 +86,22 @@ const Player = ({ playerNumber, currentScore, opponentScore, updateScore, invert
   const scoreEnabled = turnScore > 0;
 
   return (
-    <div class={inverted ? 'inverted player' : 'player'}>
+    <div className={inverted ? 'inverted player' : 'player'}>
+      <div
+        className="player-progress"
+        style={{ width: `${(currentScore * 100) / SCORE_LIMITS.MAX}%` }}
+      ></div>
       <h2>Player {playerNumber}</h2>
       <div>
         <div className="score-summary">
-          <div>
-            Score: {currentScore} - {opponentScore}{' '}
+          <div className="player-score">
+            <span className="score-title">Score:</span>
+            <span className="score-score">
+              {currentScore} - {opponentScore}
+            </span>
           </div>
           <div>
-            <span>Adjust: </span>
+            <div>Adjust: </div>
             <button onClick={() => updateScore(playerNumber, 1)}>+1</button>
             <button onClick={() => updateScore(playerNumber, -1)}>-1</button>
           </div>
@@ -124,7 +131,7 @@ const Player = ({ playerNumber, currentScore, opponentScore, updateScore, invert
             <TallyButton tallyType={TALLY.FIFTEEN} />
             <TallyButton tallyType={TALLY.PAIR} />
           </div>
-          <span>Run:</span>
+          <span>Runs:</span>
           <div className="row">
             <TallyButton tallyType={TALLY.RUN3} />
             <TallyButton tallyType={TALLY.RUN4} />
@@ -182,7 +189,7 @@ function App() {
         updateScore={changeScore}
         inverted
       />
-      <Scoreboard score={score}>
+      <Scoreboard>
         <Winner winner={score.winner} resetGame={resetGame} />
       </Scoreboard>
       <Player

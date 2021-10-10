@@ -1,6 +1,6 @@
 .App {
   display: grid;
-  grid-template-rows: 1fr 50px 1fr;
+  grid-template-rows: 1fr 25px 1fr;
   height: 95vh;
 }
 
@@ -9,8 +9,17 @@
 }
 
 .scoreboard {
-  background-color: blue;
-  color: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: tomato;
+}
+
+.winner {
+  display: flex;
+  gap: 3rem;
 }
 
 h2 {
@@ -24,17 +33,34 @@ h2 {
   padding: 0 1rem;
 }
 
+.player-progress {
+  background-color: blue;
+  height: 10px;
+  margin: 0 -1rem;
+  border-radius: 0 5px 5px 0;
+}
+
+.player-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score-title {
+  font-size: 1.5rem;
+}
+
 .btnTally {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
   height: 50px;
+  width: 60px;
 }
 
 button {
   border-radius: 5px;
-  width: 60px;
 }
 
 .btnTally .quantity {
@@ -44,8 +70,13 @@ button {
 
 .score-summary {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  align-items: center;
   padding-block-end: 2rem;
+}
+
+.scoring-grid button {
+  width: 60px;
 }
 
 .turn-control {
