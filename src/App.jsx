@@ -74,48 +74,71 @@ const Player = ({ playerNumber, currentScore, opponentScore, updateScore, invert
     );
   };
 
+  const ScoreButton = ({ onClick, enabled, enabledStyle, children }) => {
+    const style = enabled ? enabledStyle : {};
+    return (
+      <button class="btnScore" onClick={onClick} style={style} disabled={!enabled}>
+        {children}
+      </button>
+    );
+  };
+
+  const scoreEnabled = turnScore > 0;
+
   return (
     <div class={inverted ? 'inverted player' : 'player'}>
       <h2>Player {playerNumber}</h2>
       <div>
-        <div>
-          Score: {currentScore} - {opponentScore}{' '}
-        </div>
-        <div>
-          <span>Adjust</span>
-          <button onClick={() => updateScore(playerNumber, 1)}>+1</button>
-          <button onClick={() => updateScore(playerNumber, -1)}>-1</button>
-        </div>
-        <div>
-          <div className="row">
-            <span>Turn score: {turnScore}</span>
-            {turnScore ? (
-              <>
-                <button onClick={() => resetTurn()}>reset</button>
-                <button onClick={() => submitTurn()}>score it</button>
-              </>
-            ) : null}
+        <div className="score-summary">
+          <div>
+            Score: {currentScore} - {opponentScore}{' '}
           </div>
+          <div>
+            <span>Adjust: </span>
+            <button onClick={() => updateScore(playerNumber, 1)}>+1</button>
+            <button onClick={() => updateScore(playerNumber, -1)}>-1</button>
+          </div>
+        </div>
+        <div className="scoring-grid">
+          <span>Turn score: {turnScore}</span>
+          <div className="row turn-control">
+            <>
+              <ScoreButton
+                onClick={() => resetTurn()}
+                enabled={turnScore > 0}
+                enabledStyle={{ color: 'blue', backgroundColor: 'yellow' }}
+              >
+                reset
+              </ScoreButton>
+              <ScoreButton
+                onClick={() => submitTurn()}
+                enabled={turnScore > 0}
+                enabledStyle={{ color: 'yellow', backgroundColor: 'blue' }}
+              >
+                score!
+              </ScoreButton>
+            </>
+          </div>
+          <span>Basics:</span>
           <div className="row">
-            <span>Basics:</span>
             <TallyButton tallyType={TALLY.FIFTEEN} />
             <TallyButton tallyType={TALLY.PAIR} />
           </div>
+          <span>Run:</span>
           <div className="row">
-            <span>Run:</span>
             <TallyButton tallyType={TALLY.RUN3} />
             <TallyButton tallyType={TALLY.RUN4} />
             <TallyButton tallyType={TALLY.RUN5} />
           </div>
+          <span>Flush:</span>
           <div className="row">
-            <span>Flush:</span>
             <TallyButton tallyType={TALLY.FLUSH4} />
             <TallyButton tallyType={TALLY.FLUSH5} />
           </div>
+          <span>Jacks:</span>
           <div className="row">
-            <span>Jacks:</span>
-            <button onClick={() => buildTurn(TALLY.NIBS)}>nibs(2)</button>
-            <button onClick={() => buildTurn(TALLY.NOBS)}>nobs(1)</button>
+            <button onClick={() => buildTurn(TALLY.NIBS)}>nibs/2</button>
+            <button onClick={() => buildTurn(TALLY.NOBS)}>nobs/1</button>
           </div>
         </div>
       </div>

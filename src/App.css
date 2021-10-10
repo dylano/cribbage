@@ -29,8 +29,11 @@ h2 {
   align-items: center;
   gap: 3px;
   height: 50px;
-  width: 50px;
-  border-radius: 50%;
+}
+
+button {
+  border-radius: 5px;
+  width: 60px;
 }
 
 .btnTally .quantity {
@@ -38,8 +41,23 @@ h2 {
   font-weight: 600;
 }
 
+.score-summary {
+  display: flex;
+  justify-content: space-between;
+  padding-block-end: 2rem;
+}
+
+.turn-control {
+  margin-block-end: 1rem;
+}
+
+.scoring-grid {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  margin-inline-start: 2rem;
+}
+
 .row {
   display: flex;
-  margin: 10px;
-  gap: 10px;
+  gap: 5px;
 }
